@@ -1,3 +1,3 @@
-import UsersScreen from "../../src/screens/superadmin/UserScreen";
+// import UsersScreen from "../../src/screens/superadmin/UserScreen";
 
-export default UsersScreen;
+// export default UsersScreen;

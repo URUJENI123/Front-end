@@ -1,3 +1,3 @@
-import ReportDetailsScreen from "../src/screens/ReportDetailsScreen";
+// import ReportDetailsScreen from "../src/screens/ReportDetailsScreen";
 
-export default ReportDetailsScreen;
+// export default ReportDetailsScreen;

@@ -1,8 +1,14 @@
 "use client";
 
-import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
-import { View, StyleSheet, ScrollView, RefreshControl } from "react-native";
-import { Card, Title, Paragraph, Button, FAB, Chip } from "react-native-paper";
+import { useState } from "react";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  RefreshControl,
+  TouchableOpacity,
+} from "react-native";
+import { Card, Title, Paragraph, Button, Avatar } from "react-native-paper";
 import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useApp } from "../../src/context/AppContext";
@@ -24,27 +30,66 @@ export default function CitizenDashboard() {
       case "Resolved":
         return "#4CAF50";
       case "Pending":
-        return "#9E9E9E";
+        return "#FF5722";
       default:
         return "#9E9E9E";
     }
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "High":
-        return "#F44336";
-      case "Medium":
-        return "#FFC107";
-      case "Low":
-        return "#4CAF50";
-      default:
-        return "#9E9E9E";
-    }
-  };
+  const reportCategories = [
+    {
+      id: 1,
+      name: "Potholes",
+      icon: "warning",
+      color: "#FF5722",
+      bgColor: "#FFEBEE",
+    },
+    {
+      id: 2,
+      name: "Garbage",
+      icon: "delete",
+      color: "#4CAF50",
+      bgColor: "#E8F5E8",
+    },
+    {
+      id: 3,
+      name: "Street Lights",
+      icon: "lightbulb",
+      color: "#FFC107",
+      bgColor: "#FFF8E1",
+    },
+    {
+      id: 4,
+      name: "Police",
+      icon: "local-police",
+      color: "#2196F3",
+      bgColor: "#E3F2FD",
+    },
+  ];
+
+  const recentReports = userReports.slice(0, 3);
 
   return (
     <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <View style={styles.headerLeft}>
+          <Title style={styles.appName}>CitizenReport</Title>
+          <View style={styles.headerIcons}>
+            <TouchableOpacity style={styles.headerIcon}>
+              <MaterialIcons name="notifications" size={24} color="#333333" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.headerIcon}>
+              <Avatar.Text
+                size={32}
+                label={user?.name?.charAt(0) || "U"}
+                style={styles.avatar}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -52,172 +97,154 @@ export default function CitizenDashboard() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {/* Welcome Card */}
-        <Card style={styles.welcomeCard}>
-          <Card.Content style={styles.welcomeContent}>
-            <View style={styles.welcomeText}>
-              <Title style={styles.welcomeTitle}>
-                Welcome, {user?.name?.split(" ")[0]}!
-              </Title>
-              <Paragraph style={styles.welcomeSubtitle}>
-                Track your reports and community issues
-              </Paragraph>
-            </View>
-            <View style={styles.avatarContainer}>
-              <MaterialIcons name="person" size={32} color="#3F51B5" />
-            </View>
-          </Card.Content>
-        </Card>
-
-        {/* Stats Cards */}
-        <View style={styles.statsContainer}>
-          <Card style={styles.statCard}>
-            <Card.Content style={styles.statContent}>
-              <MaterialIcons
-                name="list-alt"
-                size={24}
-                color="#3F51B5"
-                style={styles.statIcon}
-              />
-              <Title style={styles.statNumber}>{userReports.length}</Title>
-              <Paragraph style={styles.statLabel}>Total Reports</Paragraph>
-            </Card.Content>
-          </Card>
-
-          <Card style={styles.statCard}>
-            <Card.Content style={styles.statContent}>
-              <MaterialIcons
-                name="pending"
-                size={24}
-                color="#9E9E9E"
-                style={styles.statIcon}
-              />
-              <Title style={styles.statNumber}>
-                {userReports.filter((r: { status: string; }) => r.status === "Pending").length}
-              </Title>
-              <Paragraph style={styles.statLabel}>Pending</Paragraph>
-            </Card.Content>
-          </Card>
-
-          <Card style={styles.statCard}>
-            <Card.Content style={styles.statContent}>
-              <MaterialIcons
-                name="autorenew"
-                size={24}
-                color="#FFC107"
-                style={styles.statIcon}
-              />
-              <Title style={styles.statNumber}>
-                {userReports.filter((r: { status: string; }) => r.status === "In Progress").length}
-              </Title>
-              <Paragraph style={styles.statLabel}>In Progress</Paragraph>
-            </Card.Content>
-          </Card>
-
-          <Card style={styles.statCard}>
-            <Card.Content style={styles.statContent}>
-              <MaterialIcons
-                name="check-circle"
-                size={24}
-                color="#4CAF50"
-                style={styles.statIcon}
-              />
-              <Title style={styles.statNumber}>
-                {userReports.filter((r: { status: string; }) => r.status === "Resolved").length}
-              </Title>
-              <Paragraph style={styles.statLabel}>Resolved</Paragraph>
-            </Card.Content>
-          </Card>
+        {/* Report an Issue Section */}
+        <View style={styles.section}>
+          <Title style={styles.sectionTitle}>Report an Issue</Title>
+          <View style={styles.categoriesGrid}>
+            {reportCategories.map((category) => (
+              <TouchableOpacity
+                key={category.id}
+                style={styles.categoryCard}
+                onPress={() => router.push("/(tabs)/create-report")}
+              >
+                <View
+                  style={[
+                    styles.categoryIcon,
+                    { backgroundColor: category.bgColor },
+                  ]}
+                >
+                  <MaterialIcons
+                    name={category.icon as any}
+                    size={24}
+                    color={category.color}
+                  />
+                </View>
+                <Paragraph style={styles.categoryName}>
+                  {category.name}
+                </Paragraph>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
 
-        {/* Quick Actions */}
-        <Card style={styles.actionCard}>
-          <Card.Content style={styles.actionContent}>
-            <Title style={styles.sectionTitle}>Quick Actions</Title>
-            <Button
-              mode="contained"
-              onPress={() => router.push("/(tabs)/create-report")}
-              style={styles.primaryAction}
-              contentStyle={styles.actionButtonContent}
-              buttonColor="#3F51B5"
-              icon="add"
-            >
-              Create New Report
-            </Button>
-            <Button
-              mode="outlined"
-              onPress={() => router.push("/(tabs)/my-reports")}
-              style={styles.secondaryAction}
-              contentStyle={styles.actionButtonContent}
-              textColor="#3F51B5"
-              theme={{
-                colors: {
-                  outline: "#3F51B5",
-                },
-              }}
-              icon="list"
-            >
-              View All Reports
-            </Button>
-          </Card.Content>
-        </Card>
-
         {/* Recent Reports */}
-        {userReports.length > 0 && (
-          <Card style={styles.recentCard}>
-            <Card.Content style={styles.recentContent}>
-              <Title style={styles.sectionTitle}>Recent Reports</Title>
-              {userReports.slice(0, 3).map((report: { id: Key | null | undefined; title: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; priority: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; status: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; category: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; createdAt: string | number | Date; }) => (
-                <View key={report.id} style={styles.reportItem}>
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Title style={styles.sectionTitle}>Recent Reports</Title>
+            <Button
+              mode="text"
+              onPress={() => router.push("/(tabs)/my-reports")}
+              textColor="#4285F4"
+              style={styles.viewAllButton}
+            >
+              View All
+            </Button>
+          </View>
+
+          {recentReports.length > 0 ? (
+            <View style={styles.reportsContainer}>
+              {recentReports.map((report) => (
+                <TouchableOpacity key={report.id} style={styles.reportCard}>
                   <View style={styles.reportHeader}>
-                    <Paragraph style={styles.reportTitle} numberOfLines={1}>
-                      {report.title}
-                    </Paragraph>
-                    <View style={styles.reportChips}>
-                      <Chip
-                        style={[
-                          styles.priorityChip,
-                          {
-                            backgroundColor: getPriorityColor(report.priority),
-                          },
-                        ]}
-                        textStyle={styles.chipText}
-                      >
-                        {report.priority}
-                      </Chip>
-                      <Chip
-                        style={[
-                          styles.statusChip,
-                          { backgroundColor: getStatusColor(report.status) },
-                        ]}
-                        textStyle={styles.chipText}
-                      >
-                        {report.status}
-                      </Chip>
+                    <View
+                      style={[
+                        styles.reportStatusIcon,
+                        { backgroundColor: getStatusColor(report.status) },
+                      ]}
+                    >
+                      <MaterialIcons
+                        name={
+                          report.status === "Resolved"
+                            ? "check"
+                            : report.status === "In Progress"
+                            ? "autorenew"
+                            : "warning"
+                        }
+                        size={16}
+                        color="#FFFFFF"
+                      />
+                    </View>
+                    <View style={styles.reportContent}>
+                      <Paragraph style={styles.reportTitle} numberOfLines={1}>
+                        {report.title}
+                      </Paragraph>
+                      <Paragraph style={styles.reportMeta}>
+                        Reported •{" "}
+                        {new Date(report.createdAt).toLocaleDateString()} • 👁{" "}
+                        {Math.floor(Math.random() * 50) + 10} views
+                      </Paragraph>
+                      <View style={styles.reportStatus}>
+                        <Paragraph
+                          style={[
+                            styles.reportStatusText,
+                            { color: getStatusColor(report.status) },
+                          ]}
+                        >
+                          {report.status}
+                        </Paragraph>
+                      </View>
                     </View>
                   </View>
-                  <View style={styles.reportMeta}>
-                    <Paragraph style={styles.metaText}>
-                      {report.category}
-                    </Paragraph>
-                    <Paragraph style={styles.metaText}>
-                      {new Date(report.createdAt).toLocaleDateString()}
-                    </Paragraph>
-                  </View>
-                </View>
+                </TouchableOpacity>
               ))}
-            </Card.Content>
-          </Card>
-        )}
-      </ScrollView>
+            </View>
+          ) : (
+            <Card style={styles.emptyCard}>
+              <Card.Content style={styles.emptyContent}>
+                <MaterialIcons name="report-off" size={48} color="#CCCCCC" />
+                <Paragraph style={styles.emptyText}>No reports yet</Paragraph>
+                <Button
+                  mode="contained"
+                  onPress={() => router.push("/(tabs)/create-report")}
+                  style={styles.createFirstButton}
+                  buttonColor="#4285F4"
+                >
+                  Create Your First Report
+                </Button>
+              </Card.Content>
+            </Card>
+          )}
+        </View>
 
-      {/* Floating Action Button */}
-      <FAB
-        style={styles.fab}
-        icon="plus"
-        onPress={() => router.push("/(tabs)/create-report")}
-        color="#FFFFFF"
-      />
+        {/* Community Impact */}
+        <View style={styles.section}>
+          <Title style={styles.sectionTitle}>Community Impact</Title>
+          <View style={styles.statsContainer}>
+            <View style={styles.statItem}>
+              <Title style={styles.statNumber}>127</Title>
+              <Paragraph style={styles.statLabel}>Reports Filed</Paragraph>
+            </View>
+            <View style={styles.statItem}>
+              <Title style={[styles.statNumber, { color: "#4CAF50" }]}>
+                94
+              </Title>
+              <Paragraph style={styles.statLabel}>Resolved</Paragraph>
+            </View>
+            <View style={styles.statItem}>
+              <Title style={[styles.statNumber, { color: "#FFC107" }]}>
+                33
+              </Title>
+              <Paragraph style={styles.statLabel}>In Progress</Paragraph>
+            </View>
+          </View>
+        </View>
+
+        {/* Emergency Report Button */}
+        <View style={styles.emergencySection}>
+          <Button
+            mode="contained"
+            onPress={() => router.push("/(tabs)/create-report")}
+            style={styles.emergencyButton}
+            contentStyle={styles.emergencyButtonContent}
+            buttonColor="#FF5722"
+            icon={() => (
+              <MaterialIcons name="warning" size={20} color="#FFFFFF" />
+            )}
+          >
+            Report Emergency
+          </Button>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -225,65 +252,168 @@ export default function CitizenDashboard() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#F8F9FF",
+  },
+  header: {
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    paddingBottom: 15,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  headerLeft: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  appName: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#4285F4",
+  },
+  headerIcons: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  headerIcon: {
+    padding: 4,
+  },
+  avatar: {
+    backgroundColor: "#4285F4",
   },
   scrollView: {
     flex: 1,
   },
-  welcomeCard: {
-    margin: 15,
-    marginBottom: 10,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 8,
-    elevation: 2,
+  section: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
   },
-  welcomeContent: {
+  sectionHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 20,
+    marginBottom: 16,
   },
-  welcomeText: {
-    flex: 1,
-  },
-  welcomeTitle: {
-    fontSize: 20,
-    fontWeight: "700",
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
     color: "#333333",
-    marginBottom: 4,
   },
-  welcomeSubtitle: {
-    fontSize: 14,
-    color: "#666666",
+  viewAllButton: {
+    marginRight: -12,
   },
-  avatarContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#E8EAF6",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  statsContainer: {
+  categoriesGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    paddingHorizontal: 15,
-    marginBottom: 10,
+    marginTop: 16,
   },
-  statCard: {
+  categoryCard: {
     width: "48%",
     backgroundColor: "#FFFFFF",
-    borderRadius: 8,
-    elevation: 2,
-    marginBottom: 10,
-  },
-  statContent: {
+    borderRadius: 12,
+    padding: 20,
     alignItems: "center",
-    padding: 16,
+    marginBottom: 12,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
-  statIcon: {
+  categoryIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  categoryName: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#333333",
+    textAlign: "center",
+  },
+  reportsContainer: {
+    gap: 12,
+  },
+  reportCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    padding: 16,
+    elevation: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+  },
+  reportHeader: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
+  reportStatusIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  reportContent: {
+    flex: 1,
+  },
+  reportTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#333333",
+    marginBottom: 4,
+  },
+  reportMeta: {
+    fontSize: 12,
+    color: "#666666",
     marginBottom: 8,
+  },
+  reportStatus: {
+    alignSelf: "flex-start",
+  },
+  reportStatusText: {
+    fontSize: 12,
+    fontWeight: "500",
+  },
+  emptyCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    elevation: 1,
+  },
+  emptyContent: {
+    alignItems: "center",
+    padding: 30,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: "#666666",
+    marginVertical: 16,
+  },
+  createFirstButton: {
+    borderRadius: 8,
+  },
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    padding: 20,
+    marginTop: 16,
+    elevation: 1,
+  },
+  statItem: {
+    alignItems: "center",
   },
   statNumber: {
     fontSize: 24,
@@ -294,89 +424,16 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: 12,
     color: "#666666",
-    textAlign: "center",
   },
-  actionCard: {
-    margin: 15,
-    marginBottom: 10,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 8,
-    elevation: 2,
+  emergencySection: {
+    paddingHorizontal: 20,
+    paddingBottom: 100,
   },
-  actionContent: {
-    padding: 20,
+  emergencyButton: {
+    borderRadius: 12,
+    elevation: 4,
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333333",
-    marginBottom: 16,
-  },
-  primaryAction: {
-    borderRadius: 8,
-    marginBottom: 12,
-  },
-  secondaryAction: {
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  actionButtonContent: {
-    paddingVertical: 8,
-  },
-  recentCard: {
-    margin: 15,
-    marginBottom: 100,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 8,
-    elevation: 2,
-  },
-  recentContent: {
-    padding: 20,
-  },
-  reportItem: {
+  emergencyButtonContent: {
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F0F0F0",
-  },
-  reportHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 8,
-  },
-  reportTitle: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#333333",
-    flex: 1,
-    marginRight: 8,
-  },
-  reportChips: {
-    flexDirection: "row",
-    gap: 4,
-  },
-  priorityChip: {
-    height: 20,
-  },
-  statusChip: {
-    height: 20,
-  },
-  chipText: {
-    fontSize: 10,
-    color: "#FFFFFF",
-  },
-  reportMeta: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  metaText: {
-    fontSize: 12,
-    color: "#666666",
-  },
-  fab: {
-    position: "absolute",
-    right: 16,
-    bottom: 16,
-    backgroundColor: "#3F51B5",
   },
 });

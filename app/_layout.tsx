@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { Stack } from "expo-router"
-import { Provider as PaperProvider } from "react-native-paper"
-import { AppProvider } from "../src/context/AppContext"
-import * as SplashScreen from "expo-splash-screen"
+import { useEffect } from "react";
+import { Stack } from "expo-router";
+import { Provider as PaperProvider } from "react-native-paper";
+import { AppProvider } from "../src/context/AppContext";
+import * as SplashScreen from "expo-splash-screen";
 
 const theme = {
   colors: {
@@ -16,20 +16,20 @@ const theme = {
     onSurface: "#000000",
     disabled: "#9E9E9E",
   },
-}
+};
 
 // Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync()
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   useEffect(() => {
     // Hide splash screen after a short delay
     const timer = setTimeout(() => {
-      SplashScreen.hideAsync()
-    }, 2000)
+      SplashScreen.hideAsync();
+    }, 2000);
 
-    return () => clearTimeout(timer)
-  }, [])
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <PaperProvider theme={theme}>
@@ -38,6 +38,7 @@ export default function RootLayout() {
           <Stack.Screen name="index" />
           <Stack.Screen name="welcome" />
           <Stack.Screen name="login" />
+          <Stack.Screen name="signup" />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="report-details" />
           <Stack.Screen name="settings" />
@@ -45,5 +46,5 @@ export default function RootLayout() {
         </Stack>
       </AppProvider>
     </PaperProvider>
-  )
+  );
 }

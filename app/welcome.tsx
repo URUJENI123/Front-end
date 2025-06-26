@@ -1,67 +1,104 @@
 import { View, StyleSheet } from "react-native";
-import { Title, Paragraph, Button, Card } from "react-native-paper";
+import { Title, Paragraph, Button } from "react-native-paper";
 import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 
 export default function WelcomeScreen() {
   return (
     <View style={styles.container}>
-      {/* Header with Logo */}
+      {/* Skip Button */}
       <View style={styles.header}>
+        <Button
+          mode="text"
+          onPress={() => router.push("/login")}
+          textColor="#4285F4"
+          style={styles.skipButton}
+        >
+          Skip
+        </Button>
+      </View>
+
+      {/* App Logo */}
+      <View style={styles.logoSection}>
         <View style={styles.logoContainer}>
-          <MaterialIcons name="report-problem" size={48} color="#3F51B5" />
+          <MaterialIcons name="flag" size={32} color="#FFFFFF" />
         </View>
+
+        <View style={styles.decorativeIcons}>
+          <View
+            style={[
+              styles.smallIcon,
+              { backgroundColor: "#FF5722", top: 20, left: -20 },
+            ]}
+          >
+            <MaterialIcons name="warning" size={16} color="#FFFFFF" />
+          </View>
+          <View
+            style={[
+              styles.smallIcon,
+              { backgroundColor: "#FFC107", top: 40, right: -30 },
+            ]}
+          >
+            <MaterialIcons name="lightbulb" size={16} color="#FFFFFF" />
+          </View>
+          <View
+            style={[
+              styles.smallIcon,
+              { backgroundColor: "#4CAF50", top: 60, left: -40 },
+            ]}
+          >
+            <MaterialIcons name="delete" size={16} color="#FFFFFF" />
+          </View>
+        </View>
+      </View>
+
+      {/* Welcome Content */}
+      <View style={styles.content}>
         <Title style={styles.title}>Welcome to</Title>
         <Title style={styles.brandTitle}>CitizenReport</Title>
         <Paragraph style={styles.subtitle}>
-          Report issues, track progress, and help improve your community
+          Your voice matters! Report community issues like potholes, broken
+          streetlights, and more to help improve your neighborhood.
         </Paragraph>
       </View>
 
-      {/* Feature Cards */}
+      {/* Features */}
       <View style={styles.features}>
-        <Card style={styles.featureCard}>
-          <Card.Content style={styles.featureContent}>
-            <View style={styles.featureIconContainer}>
-              <MaterialIcons name="report" size={32} color="#4CAF50" />
-            </View>
-            <View style={styles.featureTextContainer}>
-              <Title style={styles.featureTitle}>Report Issues</Title>
-              <Paragraph style={styles.featureText}>
-                Easily report problems in your community with photos and
-                location
-              </Paragraph>
-            </View>
-          </Card.Content>
-        </Card>
+        <View style={styles.featureItem}>
+          <View style={[styles.featureIcon, { backgroundColor: "#E3F2FD" }]}>
+            <MaterialIcons name="camera-alt" size={20} color="#4285F4" />
+          </View>
+          <View style={styles.featureText}>
+            <Paragraph style={styles.featureTitle}>Photo Reports</Paragraph>
+            <Paragraph style={styles.featureDesc}>
+              Capture and share evidence
+            </Paragraph>
+          </View>
+        </View>
 
-        <Card style={styles.featureCard}>
-          <Card.Content style={styles.featureContent}>
-            <View style={styles.featureIconContainer}>
-              <MaterialIcons name="track-changes" size={32} color="#FF9800" />
-            </View>
-            <View style={styles.featureTextContainer}>
-              <Title style={styles.featureTitle}>Track Progress</Title>
-              <Paragraph style={styles.featureText}>
-                Monitor the status of your reports and receive updates
-              </Paragraph>
-            </View>
-          </Card.Content>
-        </Card>
+        <View style={styles.featureItem}>
+          <View style={[styles.featureIcon, { backgroundColor: "#E8F5E8" }]}>
+            <MaterialIcons name="location-on" size={20} color="#4CAF50" />
+          </View>
+          <View style={styles.featureText}>
+            <Paragraph style={styles.featureTitle}>GPS Location</Paragraph>
+            <Paragraph style={styles.featureDesc}>
+              Automatic location tagging
+            </Paragraph>
+          </View>
+        </View>
 
-        <Card style={styles.featureCard}>
-          <Card.Content style={styles.featureContent}>
-            <View style={styles.featureIconContainer}>
-              <MaterialIcons name="people" size={32} color="#9C27B0" />
-            </View>
-            <View style={styles.featureTextContainer}>
-              <Title style={styles.featureTitle}>Community Impact</Title>
-              <Paragraph style={styles.featureText}>
-                Work together to make your community a better place
-              </Paragraph>
-            </View>
-          </Card.Content>
-        </Card>
+        <View style={styles.featureItem}>
+          <View style={[styles.featureIcon, { backgroundColor: "#FFF3E0" }]}>
+            <MaterialIcons name="notifications" size={20} color="#FF9800" />
+          </View>
+          <View style={styles.featureText}>
+            <Paragraph style={styles.featureTitle}>Real-time Updates</Paragraph>
+            <Paragraph style={styles.featureDesc}>
+              Track report progress
+            </Paragraph>
+          </View>
+        </View>
       </View>
 
       {/* Action Buttons */}
@@ -71,22 +108,23 @@ export default function WelcomeScreen() {
           onPress={() => router.push("/signup")}
           style={styles.primaryButton}
           contentStyle={styles.buttonContent}
-          buttonColor="#3F51B5"
+          buttonColor="#4285F4"
         >
           Get Started
         </Button>
 
-        <View style={styles.loginPrompt}>
-          <Paragraph style={styles.loginText}>
-            Already have an account?{" "}
-            <Paragraph
-              style={styles.loginLink}
-              onPress={() => router.push("/login")}
-            >
-              Sign In
-            </Paragraph>
-          </Paragraph>
-        </View>
+        <Button
+          mode="text"
+          onPress={() => router.push("/login")}
+          textColor="#666666"
+          style={styles.secondaryButton}
+        >
+          I Already Have an Account
+        </Button>
+
+        <Paragraph style={styles.termsText}>
+          By continuing, you agree to our Terms and Privacy Policy
+        </Paragraph>
       </View>
     </View>
   );
@@ -95,35 +133,63 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 20,
+    backgroundColor: "#F8F9FF",
+    paddingHorizontal: 24,
   },
   header: {
+    alignItems: "flex-end",
+    paddingTop: 50,
+    paddingBottom: 20,
+  },
+  skipButton: {
+    marginRight: -12,
+  },
+  logoSection: {
     alignItems: "center",
-    paddingTop: 80,
-    paddingBottom: 40,
+    paddingVertical: 40,
+    position: "relative",
   },
   logoContainer: {
     width: 80,
     height: 80,
-    borderRadius: 40,
-    backgroundColor: "#E8EAF6",
+    borderRadius: 20,
+    backgroundColor: "#4285F4",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 24,
+    elevation: 8,
+    shadowColor: "#4285F4",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  decorativeIcons: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+  },
+  smallIcon: {
+    position: "absolute",
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 4,
+  },
+  content: {
+    alignItems: "center",
+    paddingBottom: 40,
   },
   title: {
     fontSize: 28,
     fontWeight: "400",
     color: "#333333",
-    textAlign: "center",
     marginBottom: 4,
   },
   brandTitle: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#3F51B5",
-    textAlign: "center",
+    color: "#4285F4",
     marginBottom: 16,
   },
   subtitle: {
@@ -134,67 +200,52 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   features: {
-    flex: 1,
-    justifyContent: "center",
-    paddingVertical: 20,
+    paddingBottom: 40,
   },
-  featureCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-    marginBottom: 16,
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-  },
-  featureContent: {
+  featureItem: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 20,
+    marginBottom: 20,
   },
-  featureIconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "#F5F5F5",
+  featureIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 16,
   },
-  featureTextContainer: {
+  featureText: {
     flex: 1,
   },
   featureTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "600",
     color: "#333333",
-    marginBottom: 4,
+    marginBottom: 2,
   },
-  featureText: {
+  featureDesc: {
     fontSize: 14,
     color: "#666666",
-    lineHeight: 20,
   },
   actions: {
-    paddingBottom: 50,
+    paddingBottom: 40,
   },
   primaryButton: {
-    borderRadius: 8,
-    marginBottom: 24,
+    borderRadius: 12,
+    marginBottom: 16,
+    elevation: 2,
   },
   buttonContent: {
     paddingVertical: 12,
   },
-  loginPrompt: {
-    alignItems: "center",
+  secondaryButton: {
+    marginBottom: 20,
   },
-  loginText: {
-    fontSize: 14,
-    color: "#666666",
-  },
-  loginLink: {
-    color: "#3F51B5",
-    fontWeight: "600",
+  termsText: {
+    fontSize: 12,
+    color: "#999999",
+    textAlign: "center",
+    lineHeight: 18,
   },
 });
