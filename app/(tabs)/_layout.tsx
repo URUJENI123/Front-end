@@ -1,9 +1,8 @@
-import { Tabs } from "expo-router"
+import { Tabs, router } from "expo-router"
 import { View, TouchableOpacity } from "react-native"
 import { Badge } from "react-native-paper"
 import { MaterialIcons } from "@expo/vector-icons"
 import { useApp } from "../../src/context/AppContext"
-import { router } from "expo-router"
 
 // Custom Tab Bar Icon with Badge
 const TabBarIcon = ({
@@ -89,12 +88,12 @@ export default function TabLayout() {
     switch (user.role) {
       case "USER":
         const userReports = getUserReports()
-        const pendingReports = userReports.filter((r) => r.status === "Pending").length
+        const pendingReports = userReports.filter((r: { status: string }) => r.status === "Pending").length
         return { reports: pendingReports, notifications: unreadNotifications }
 
       case "STAFF":
         const assignedReports = getAssignedReports()
-        const pendingAssignments = assignedReports.filter((r) => r.status === "Pending").length
+        const pendingAssignments = assignedReports.filter((r: { status: string }) => r.status === "Pending").length
         return { reports: pendingAssignments, notifications: unreadNotifications }
 
       case "SUPER_ADMIN":

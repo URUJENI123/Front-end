@@ -74,15 +74,20 @@ export default function LoginScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <MaterialIcons name="account-circle" size={80} color="#3F51B5" />
-        <Title style={styles.title}>Welcome Back</Title>
-        <Paragraph style={styles.subtitle}>Sign in to your account</Paragraph>
-      </View>
+    <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Header */}
+        <View style={styles.header}>
+          <MaterialIcons name="account-circle" size={80} color="#3F51B5" />
+          <Title style={styles.title}>Welcome Back</Title>
+          <Paragraph style={styles.subtitle}>Sign in to your account</Paragraph>
+        </View>
 
-      <Card style={styles.loginCard}>
-        <Card.Content>
+        {/* Login Form */}
+        <View style={styles.formContainer}>
           <TextInput
             label="Email"
             value={email}
@@ -91,7 +96,14 @@ export default function LoginScreen() {
             style={styles.input}
             keyboardType="email-address"
             autoCapitalize="none"
-            left={<TextInput.Icon icon="email" />}
+            outlineColor="#E0E0E0"
+            activeOutlineColor="#3F51B5"
+            theme={{
+              colors: {
+                primary: "#3F51B5",
+                outline: "#E0E0E0",
+              },
+            }}
           />
 
           <TextInput
@@ -101,7 +113,14 @@ export default function LoginScreen() {
             mode="outlined"
             style={styles.input}
             secureTextEntry={!showPassword}
-            left={<TextInput.Icon icon="lock" />}
+            outlineColor="#E0E0E0"
+            activeOutlineColor="#3F51B5"
+            theme={{
+              colors: {
+                primary: "#3F51B5",
+                outline: "#E0E0E0",
+              },
+            }}
             right={
               <TextInput.Icon
                 icon={showPassword ? "eye-off" : "eye"}
@@ -117,12 +136,14 @@ export default function LoginScreen() {
             disabled={loading}
             style={styles.loginButton}
             contentStyle={styles.buttonContent}
+            buttonColor="#3F51B5"
           >
             Sign In
           </Button>
 
           <Divider style={styles.divider} />
 
+          {/* Demo Accounts */}
           <Paragraph style={styles.demoTitle}>Demo Accounts:</Paragraph>
 
           <View style={styles.demoButtons}>
@@ -130,7 +151,13 @@ export default function LoginScreen() {
               mode="outlined"
               onPress={() => quickLogin("citizen")}
               style={styles.demoButton}
-              icon="person"
+              contentStyle={styles.demoButtonContent}
+              textColor="#3F51B5"
+              theme={{
+                colors: {
+                  outline: "#3F51B5",
+                },
+              }}
             >
               Citizen
             </Button>
@@ -139,7 +166,13 @@ export default function LoginScreen() {
               mode="outlined"
               onPress={() => quickLogin("staff")}
               style={styles.demoButton}
-              icon="badge"
+              contentStyle={styles.demoButtonContent}
+              textColor="#3F51B5"
+              theme={{
+                colors: {
+                  outline: "#3F51B5",
+                },
+              }}
             >
               Staff
             </Button>
@@ -148,81 +181,113 @@ export default function LoginScreen() {
               mode="outlined"
               onPress={() => quickLogin("admin")}
               style={styles.demoButton}
-              icon="admin-panel-settings"
+              contentStyle={styles.demoButtonContent}
+              textColor="#3F51B5"
+              theme={{
+                colors: {
+                  outline: "#3F51B5",
+                },
+              }}
             >
               Admin
             </Button>
           </View>
-        </Card.Content>
-      </Card>
+        </View>
 
-      <View style={styles.footer}>
-        <Paragraph style={styles.footerText}>
-          Don&apos;t have an account? Contact your administrator
-        </Paragraph>
-      </View>
-    </ScrollView>
+        {/* Footer */}
+        <View style={styles.footer}>
+          <Paragraph style={styles.signupText}>
+            Don&apos;t have an account?{" "}
+            <Paragraph
+              style={styles.signupLink}
+              onPress={() => router.push("/signup")}
+            >
+              Create Account
+            </Paragraph>
+          </Paragraph>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
-    padding: 20,
+    backgroundColor: "#FFFFFF",
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 20,
   },
   header: {
     alignItems: "center",
-    marginTop: 60,
-    marginBottom: 40,
+    paddingTop: 80,
+    paddingBottom: 40,
   },
   title: {
     fontSize: 28,
-    fontWeight: "bold",
-    color: "#3F51B5",
+    fontWeight: "700",
+    color: "#333333",
     marginTop: 20,
+    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: "#666",
-    marginTop: 10,
+    color: "#666666",
+    textAlign: "center",
   },
-  loginCard: {
-    elevation: 4,
-    marginBottom: 30,
+  formContainer: {
+    flex: 1,
+    paddingBottom: 20,
   },
   input: {
-    marginBottom: 15,
+    marginBottom: 16,
+    backgroundColor: "#FFFFFF",
   },
   loginButton: {
-    marginTop: 10,
-    marginBottom: 20,
+    borderRadius: 8,
+    marginTop: 8,
+    marginBottom: 24,
   },
   buttonContent: {
-    paddingVertical: 8,
+    paddingVertical: 12,
   },
   divider: {
-    marginVertical: 20,
+    marginBottom: 24,
+    backgroundColor: "#E0E0E0",
   },
   demoTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#666666",
     textAlign: "center",
-    fontWeight: "bold",
-    marginBottom: 15,
-    color: "#666",
+    marginBottom: 16,
   },
   demoButtons: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 10,
+    gap: 8,
   },
   demoButton: {
     flex: 1,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  demoButtonContent: {
+    paddingVertical: 8,
   },
   footer: {
     alignItems: "center",
+    paddingBottom: 40,
+    paddingTop: 20,
   },
-  footerText: {
-    color: "#666",
+  signupText: {
+    fontSize: 14,
+    color: "#666666",
     textAlign: "center",
+  },
+  signupLink: {
+    color: "#3F51B5",
+    fontWeight: "600",
   },
 });
