@@ -9,9 +9,9 @@ import { useApp } from "../context/AppContext";
 // Import screens
 import LoginScreen from "../screens/LoginScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
-import CitizenDashboard from "../screens/citizen/CitizenDashboard";
-import CreateReportScreen from "../screens/citizen/CreateReportScreen";
-import MyReportsScreen from "../screens/citizen/MyReportScreen";
+import CitizenDashboard from "../screens/Citizen/CitizenDashboard";
+import CreateReportScreen from "../screens/Citizen/CreateReportScreen";
+import MyReportsScreen from "../screens/Citizen/MyReportsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import StaffDashboard from "../screens/staff/StaffDashboard";
 import AssignedReportsScreen from "../screens/staff/AssignedReportsScreen";
@@ -316,9 +316,9 @@ const StaffTabs = () => {
 
 // Super Admin Tabs
 const SuperAdminTabs = () => {
-  const { getUnassignedReports, getUnreadNotifications, stats } = useApp();
+  const { getUnassignedReports, stats } = useApp();
   const unassignedReports = getUnassignedReports().length;
-  const unreadNotifications = getUnreadNotifications().length;
+  
 
   return (
     <Tab.Navigator
